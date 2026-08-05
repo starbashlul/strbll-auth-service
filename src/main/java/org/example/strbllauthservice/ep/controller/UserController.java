@@ -26,5 +26,4 @@ public class UserController {
     public ResponseEntity<TokenResponse> signUpUser(@RequestBody SignUpDto signUpDto) {
         return ResponseEntity.ok(userService.signUp(signUpDto));
     }
-    //TODO: add user info change
 }

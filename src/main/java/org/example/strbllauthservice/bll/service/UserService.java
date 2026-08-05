@@ -9,6 +9,7 @@ import org.example.strbllauthservice.ep.dto.TokenResponse;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserService {
@@ -28,7 +29,7 @@ public class UserService {
         user.setPasswordHash(passwordEncoder.encode(signUpDto.getPassword()));
         user = UserConverter.toModel(userRepository.save(UserConverter.toEntity(user)));
 
-        return new TokenResponse(jwtService.generateAccessToken(user), null);
+        return new TokenResponse(jwtService.generateRefreshToken(user), jwtService.generateAccessToken(user));
     }
 
     public TokenResponse signIn(SignInDto signInDto) {
@@ -39,7 +40,24 @@ public class UserService {
                     "Invalid credentials"
             );
 
-        return new TokenResponse(jwtService.generateAccessToken(user), null);
+        return new TokenResponse(jwtService.generateRefreshToken(user), jwtService.generateAccessToken(user));
+    }
+
+    @Transactional
+    public TokenResponse refresh(String refreshToken) {
+        String login = jwtService.parse(refreshToken);
+
+        User user = UserConverter.toModel(userRepository.findUserEntityByLogin(login));
+        if(!user.getRefreshToken().equals(refreshToken)) {
+            throw new BadCredentialsException("Invalid refresh token");
+        }
+
+        String accessToken = jwtService.generateAccessToken(user);
+
+        user.setRefreshToken(refreshToken);
+        userRepository.save(UserConverter.toEntity(user));
+
+        return new TokenResponse(refreshToken, accessToken);
     }
 
 }
