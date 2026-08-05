@@ -4,13 +4,12 @@ import jakarta.persistence.*;
 
 import java.util.Objects;
 import java.util.StringJoiner;
+import java.util.UUID;
 
 @Entity
 public class UserEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id_seq")
-    @SequenceGenerator(name = "id_seq", sequenceName = "id_seq", allocationSize = 1, initialValue = 10000)
-    private Integer id;
+    private UUID id;
 
     private String login;
 
@@ -22,11 +21,11 @@ public class UserEntity {
         //default
     }
 
-    public Integer getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

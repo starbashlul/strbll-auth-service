@@ -47,12 +47,12 @@ public class JwtService {
                 .compact();
     }
 
-    public String parse(String token) {
-        return Jwts.parser()
+    public UUID parseId(String token) {
+        return UUID.fromString(Jwts.parser()
                 .verifyWith(publicKey)
                 .build()
                 .parseSignedClaims(token)
                 .getPayload()
-                .getSubject();
+                .getId());
     }
 }

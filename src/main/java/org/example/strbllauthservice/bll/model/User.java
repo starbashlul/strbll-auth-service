@@ -2,9 +2,10 @@ package org.example.strbllauthservice.bll.model;
 
 import java.util.Objects;
 import java.util.StringJoiner;
+import java.util.UUID;
 
 public class User {
-    private Integer id;
+    private UUID id;
 
     private String login;
 
@@ -16,11 +17,11 @@ public class User {
         //default
     }
 
-    public Integer getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
